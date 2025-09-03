@@ -13,7 +13,7 @@ const Sidebar = () => {
     };
     return (
         <section className="h-screen w-64 bg-[#f9f7f3] flex flex-col justify-between shadow-md">
-            {/*Top Section */}
+            {/*Header*/}
             <div>
                 <div className="p-6 border-b border-gray-200">
                     <h1 className="text-xl font-Heading font-bold text-gray-800">Coop Farm Hub</h1>
