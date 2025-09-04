@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Users, Wheat, TrendingUp, AlertCircle } from "lucide-react";
 import { mockFarmers, mockCrops } from "../mock/mockData";
-import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 
 export const AdminDashboard = () => {
   const totalFarmers = mockFarmers.length;
@@ -12,13 +12,6 @@ export const AdminDashboard = () => {
     mockCrops.reduce((sum, crop) => sum + crop.healthScore, 0) / mockCrops.length
   );
   const readyForHarvest = mockCrops.filter((crop) => crop.status === "ready").length;
-
-  const recentActivity = [
-    { action: "New farmer registered", farmer: "Maria Garcia", time: "2 hours ago" },
-    { action: "Crop status updated", farmer: "Sarah Chen", time: "4 hours ago" },
-    { action: "Harvest completed", farmer: "David Thompson", time: "1 day ago" },
-    { action: "New crop planted", farmer: "Mike Rodriguez", time: "2 days ago" },
-  ];
 
   const statusColors = {
     planted: "bg-blue-100 text-blue-800",
@@ -41,70 +34,71 @@ export const AdminDashboard = () => {
   const pieColors = ["#3b82f6", "#10b981", "#facc15", "#9ca3af"];
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-6">
+      {/* Header */}
       <div>
-        <h2 className="text-3xl font-Heading font-bold tracking-tight">Admin Dashboard</h2>
-        <p className="text-muted-foreground font-body">
+        <h2 className="text-2xl sm:text-3xl font-Heading font-bold tracking-tight">Admin Dashboard</h2>
+        <p className="text-sm sm:text-base text-muted-foreground font-body">
           Overview of your cooperative's farming operations
         </p>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 font-body md:grid-cols-2 lg:grid-cols-4">
-        <Card className="shadow-md">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="shadow-md w-full">
           <CardHeader className="flex justify-between items-center pb-2">
-            <CardTitle className="text-sm font-medium">Total Farmers</CardTitle>
+            <CardTitle className="text-sm sm:text-base font-medium">Total Farmers</CardTitle>
             <Users className="h-5 w-5 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">{totalFarmers}</div>
-            <p className="text-xs font-body text-muted-foreground">+2 from last month</p>
+            <div className="text-xl sm:text-2xl font-bold text-primary">{totalFarmers}</div>
+            <p className="text-xs sm:text-sm text-muted-foreground">+2 from last month</p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-md font-body">
+        <Card className="shadow-md w-full">
           <CardHeader className="flex justify-between items-center pb-2">
-            <CardTitle className="text-sm font-medium">Active Crops</CardTitle>
+            <CardTitle className="text-sm sm:text-base font-medium">Active Crops</CardTitle>
             <Wheat className="h-5 w-5 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-primary">{totalCrops}</div>
-            <p className="text-xs text-muted-foreground">{totalArea} acres total</p>
+            <div className="text-xl sm:text-2xl font-bold text-primary">{totalCrops}</div>
+            <p className="text-xs sm:text-sm text-muted-foreground">{totalArea} acres total</p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-md font-body">
+        <Card className="shadow-md w-full">
           <CardHeader className="flex justify-between items-center pb-2">
-            <CardTitle className="text-sm font-medium">Avg Health Score</CardTitle>
+            <CardTitle className="text-sm sm:text-base font-medium">Avg Health Score</CardTitle>
             <TrendingUp className="h-5 w-5 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-success">{averageHealth}%</div>
-            <p className="text-xs text-muted-foreground">+5% from last week</p>
+            <div className="text-xl sm:text-2xl font-bold text-success">{averageHealth}%</div>
+            <p className="text-xs sm:text-sm text-muted-foreground">+5% from last week</p>
           </CardContent>
         </Card>
 
-        <Card className="shadow-md font-body">
+        <Card className="shadow-md w-full">
           <CardHeader className="flex justify-between items-center pb-2">
-            <CardTitle className="text-sm font-medium">Ready for Harvest</CardTitle>
+            <CardTitle className="text-sm sm:text-base font-medium">Ready for Harvest</CardTitle>
             <AlertCircle className="h-5 w-5 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-warning">{readyForHarvest}</div>
-            <p className="text-xs text-muted-foreground">Requires attention</p>
+            <div className="text-xl sm:text-2xl font-bold text-warning">{readyForHarvest}</div>
+            <p className="text-xs sm:text-sm text-muted-foreground">Requires attention</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Charts */}
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
         {/* Bar Chart: Crops per Farmer */}
-        <Card className="shadow-md">
+        <Card className="shadow-md w-full">
           <CardHeader>
             <CardTitle>Crops per Farmer</CardTitle>
             <CardDescription>Number of crops per registered farmer</CardDescription>
           </CardHeader>
-          <CardContent className="h-64">
+          <CardContent className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={cropsPerFarmer}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -118,12 +112,12 @@ export const AdminDashboard = () => {
         </Card>
 
         {/* Pie Chart: Crop Status Distribution */}
-        <Card className="shadow-md">
+        <Card className="shadow-md w-full">
           <CardHeader>
             <CardTitle>Crop Status Distribution</CardTitle>
             <CardDescription>Visual representation of crop statuses</CardDescription>
           </CardHeader>
-          <CardContent className="h-64 flex justify-center items-center">
+          <CardContent className="h-64 w-full flex justify-center items-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie

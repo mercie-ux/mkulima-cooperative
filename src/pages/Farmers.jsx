@@ -1,31 +1,98 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Input } from '../components/ui/input';
-import { Plus, Search, Phone, MapPin, Calendar } from 'lucide-react';
-import { mockFarmers } from '../mock/mockData';
+import { Plus, Search, Phone, MapPin, Calendar, Edit, Trash2 } from 'lucide-react';
+import { getFarmers, addFarmer, updateFarmer, deleteFarmer } from '../utils/api';
 
 export default function Farmers() {
+  const [farmers, setFarmers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredFarmers = mockFarmers.filter(farmer =>
+  // Fetch farmers from backend
+  const fetchFarmers = async () => {
+    try {
+      setLoading(true);
+      const data = await getFarmers();
+      setFarmers(data);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setError('Failed to fetch farmers.');
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchFarmers();
+  }, []);
+
+  // Add farmer (example with dummy data)
+  const handleAddFarmer = async () => {
+    const newFarmer = {
+      name: 'New Farmer',
+      email: 'newfarmer@example.com',
+      phone: '',
+      location: '',
+      farmSize: 0,
+    };
+    try {
+      await addFarmer(newFarmer);
+      fetchFarmers();
+    } catch (err) {
+      console.error(err);
+      setError('Failed to add farmer.');
+    }
+  };
+
+  // Update farmer 
+  const handleEditFarmer = async (id) => {
+    const newName = prompt('Enter new name:');
+    if (!newName) return;
+    try {
+      await updateFarmer(id, { name: newName });
+      fetchFarmers();
+    } catch (err) {
+      console.error(err);
+      setError('Failed to update farmer.');
+    }
+  };
+
+  // Delete farmer
+  const handleDeleteFarmer = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this farmer?')) return;
+    try {
+      await deleteFarmer(id);
+      fetchFarmers();
+    } catch (err) {
+      console.error(err);
+      setError('Failed to delete farmer.');
+    }
+  };
+
+  // Filter farmers by search term
+  const filteredFarmers = farmers.filter(farmer =>
     farmer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (farmer.location && farmer.location.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h2 className="text-3xl font-Heading font-bold tracking-tight">Farmer Management</h2>
           <p className="text-muted-foreground font-body">
             Manage registered farmers in your cooperative
           </p>
         </div>
-        <Button className="bg-green-600 font-body text-white hover:bg-yellow-400 hover:text-gray-800">
-          <Plus className="mr-2 h-4 w-4" />
-          Add Farmer
+        <Button
+          onClick={handleAddFarmer}
+          className="bg-green-600 font-body text-white hover:bg-green-700 hover:text-white flex items-center"
+        >
+          <Plus className="mr-2 h-4 w-4" /> Add Farmer
         </Button>
       </div>
 
@@ -47,8 +114,12 @@ export default function Farmers() {
         </CardContent>
       </Card>
 
+      {/* Error & Loading */}
+      {error && <p className="text-red-600">{error}</p>}
+      {loading && <p>Loading farmers...</p>}
+
       {/* Farmers Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 font-body">
+      <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 font-body">
         {filteredFarmers.map((farmer) => (
           <Card key={farmer.id} className="shadow-farm hover:shadow-crop transition-shadow">
             <CardHeader>
@@ -64,14 +135,14 @@ export default function Farmers() {
             </CardHeader>
             <CardContent className="space-y-3">
               {farmer.phone && (
-                <div className="flex font-body items-center space-x-2">
+                <div className="flex items-center space-x-2">
                   <Phone className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">{farmer.phone}</span>
                 </div>
               )}
 
               {farmer.location && (
-                <div className="flex font-body items-center space-x-2">
+                <div className="flex items-center space-x-2">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">{farmer.location}</span>
                 </div>
@@ -79,22 +150,24 @@ export default function Farmers() {
 
               <div className="flex items-center space-x-2">
                 <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">Joined {new Date(farmer.joinDate).toLocaleDateString()}</span>
+                <span className="text-sm">
+                  Joined {new Date(farmer.joinDate).toLocaleDateString()}
+                </span>
               </div>
 
               {farmer.farmSize && (
-                <div className="flex justify-between font-body items-center pt-2">
+                <div className="flex justify-between items-center pt-2">
                   <span className="text-sm font-medium">Farm Size:</span>
                   <Badge variant="outline">{farmer.farmSize} acres</Badge>
                 </div>
               )}
 
-              <div className="flex space-x-2 pt-2 font-body">
-                <Button variant="outline" size="sm" className="flex-1">
-                  View Details
+              <div className="flex space-x-2 pt-2">
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => handleEditFarmer(farmer.id)}>
+                  <Edit className="mr-1 h-4 w-4" /> Edit
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1">
-                  Edit
+                <Button variant="destructive" size="sm" className="flex-1" onClick={() => handleDeleteFarmer(farmer.id)}>
+                  <Trash2 className="mr-1 h-4 w-4" /> Delete
                 </Button>
               </div>
             </CardContent>
@@ -102,7 +175,7 @@ export default function Farmers() {
         ))}
       </div>
 
-      {filteredFarmers.length === 0 && (
+      {filteredFarmers.length === 0 && !loading && (
         <Card className="shadow-farm">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Search className="h-12 w-12 text-muted-foreground mb-4" />

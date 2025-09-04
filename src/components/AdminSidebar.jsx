@@ -23,7 +23,7 @@ export default function AdminSidebar() {
   return (
     <div className="flex">
       {/* Mobile menu button */}
-      <div className="md:hidden p-2">
+      <div className="md:hidden">
         <p
           onClick={() => setOpen(!open)}
           className="text-green-500  focus:outline-none"

@@ -3,6 +3,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const sequelize = require('./config/database');
 
+
 // Load environment variables
 dotenv.config();
 
@@ -21,6 +22,8 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
+app.use("/api/mycrops", require('./routes/mycrops'));
+app.use("/api/farmers", require('./routes/Farmers'))
 
 // Health check route
 app.get('/api/health', (req, res) => {

@@ -15,22 +15,6 @@ export default {
 			Heading: ['Lora', 'serif'],
 			body: ['Nunito', 'sans-serif'],
 		},
-		animation: {
-			Shuffle: 'shuffle 4s ease-in-out infinite',
-			flip: 'flip 3s ease-in-out infinite',
-		},
-		keyframes: {
-			Shuffle: {
-				'0%, 100%': { transform: 'translate(0,0)' },
-				'25%': { transform: 'translate(20px, -20px)' },
-                '50%': { transform: 'translate(-20px, 20px)' },
-          		'75%': { transform: 'translate(10px, -10px)' },
-			},
-			flip: {
-				'0%, 100%': { transform: 'rotateY(0deg)'},
-				'50%': { transform: 'rotateY(180deg)' },
-			},
-		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
