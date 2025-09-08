@@ -42,7 +42,7 @@ const Sidebar = () => {
         {/* Header with close button on mobile */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200 md:hidden">
           <h1 className="text-xl font-Heading font-bold text-gray-800">Coop Farm Hub</h1>
-          <button onClick={() => setIsOpen(false)} className="text-gray-700">
+          <button onClick={() => setIsOpen(false)} className="text-green-600 bg-white">
             <X size={28} />
           </button>
         </div>

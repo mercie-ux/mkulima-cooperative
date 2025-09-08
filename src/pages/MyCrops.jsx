@@ -15,6 +15,18 @@ const Crops = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { user } = useAuth();
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    cropType: "",
+    variety: "",
+    status: "planted",
+    location: "",
+    area: "",
+    plantingDate: "",
+    expectedHarvest: "",
+    notes: "",
+  });
+  const [success, setSuccess] = useState("");
 
   // Fetch crops from API
   const fetchCrops = async () => {
@@ -23,6 +35,8 @@ const Crops = () => {
       setLoading(true);
       const query = user.role !== "admin" ? `?farmerId=${user.id}` : "";
       const data = await get(`/mycrops${query}`);
+      console.log("Crops fetched:", data);
+      
       setCrops(data);
       setLoading(false);
     } catch (err) {
@@ -37,27 +51,50 @@ const Crops = () => {
   }, [user]);
 
   // Add crop
-  const handleAddCrop = async () => {
-    const newCrop = {
-      cropType: "New Crop",
-      variety: "Variety",
-      status: "planted",
-      farmerId: user?.id,
-      farmerName: user?.name,
-      location: "",
-      area: 0,
-      plantingDate: new Date(),
-      expectedHarvest: new Date(),
-      healthScore: 100,
-      notes: "",
-    };
+  const handleSubmitCrop = async () => {
     try {
-      await post("/mycrops", newCrop);
-      fetchCrops();
+      await post("/mycrops", {
+        ...formData,
+        farmerId: user?.id,
+        farmerName: user?.name,
+        healthScore: 100,
+      });
+      fetchCrops(); // refresh crops
+      // reset form
+      setFormData({
+        cropType:"",
+        variety: "",
+        status: "planted",
+        location: "",
+        area: "",
+        plantingDate: "",
+        expectedHarvest: "",
+        notes: "",
+      });
+      //close form and show success
+      setShowForm(false);
+      setSuccess("Crop added successfully!");
+      setError(""); // to clear old errors
     } catch (err) {
       console.error(err);
       setError("Failed to add crop.");
-    }
+      setSuccess("");
+    };
+  };
+
+  // logic for cancel button
+  const HandleCancel = () => {
+    setShowForm(false);
+    setFormData({
+      cropType: "",
+      variety: "",
+      status: "planted",
+      location: "",
+      area: "",
+      plantingDate: "",
+      expectedHarvest: "",
+      notes: "",
+    });
   };
 
   // Update crop
@@ -106,18 +143,77 @@ const Crops = () => {
   };
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-6 mt-8">
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">{user?.role === "admin" ? "All Crops" : "My Crops"}</h2>
           <p>{user?.role === "admin" ? "Manage all crops across the cooperative" : "Manage your crop plantings"}</p>
         </div>
-        <Button onClick={handleAddCrop} className="bg-green-700 border-none hover:bg-green-800 rounded-lg px-4">
+        <Button onClick={() => setShowForm(true)} className="bg-green-700 border-none hover:bg-green-800 rounded-lg px-4">
           <Plus className="mr-2 h-4 w-4 font-body" /> Add Crop
         </Button>
       </div>
-
+      {success && <p className="text-green-600">{success}</p>}
+      {error && <p className="text-red-600">{error}</p>}
+      {showForm && (
+        <Card className="border font-Heading rounded-xl shadow-md p-4 mt-4">
+          <h3 className="text-lg font-semibold mb-4">Add New Crop</h3>
+          <div className="grid gap-3">
+            <Input 
+              placeholder="Crop Type"
+              value={formData.cropType}
+              onChange={e => setFormData({ ...formData, cropType: e.target.value })}
+            />
+            <Input 
+              placeholder="Variety"
+              value={formData.variety}
+              onChange={e => setFormData({ ...formData, variety: e.target.value })}
+            />
+            <Select value={formData.status}
+              onValueChange={(val) => setFormData({ ...formData, status: val})}
+            >
+              <SelectTrigger><SelectValue placeholder="Status"/></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="planted">Planted</SelectItem>
+                <SelectItem value="growing">Growing</SelectItem>
+                <SelectItem value="ready">Ready</SelectItem>
+                <SelectItem value="harvested">Harvested</SelectItem>
+              </SelectContent>
+            </Select>
+            <Input 
+              placeholder="Location"
+              value={formData.location}
+              onChange={e => setFormData({ ...formData, location: e.target.value })}
+            />
+            <Input 
+              placeholder="Area (in acres)"
+              type="number"
+              value={formData.area}
+              onChange={e => setFormData({ ...formData, area: e.target.value })}
+            />
+            <Input 
+              placeholder="date"
+              value={formData.plantingDate}
+              onChange={e => setFormData({ ...formData, plantingDate: e.target.value })}
+            />
+            <Input 
+              placeholder="date"
+              value={formData.expectedHarvest}
+              onChange={e => setFormData({ ...formData, expectedHarvest: e.target.value })}
+            />
+            <Input 
+              placeholder="Notes"
+              value={formData.notes}
+              onChange={e => setFormData({ ...formData, notes: e.target.value})}
+            />
+            <div className="flex gap-2">
+              <Button onClick={handleSubmitCrop} className="bg-green-700">Save</Button>
+              <Button variant="outline" onClick={HandleCancel}>Cancel</Button>
+            </div>
+          </div>
+        </Card>
+      )}
       {/* Filters */}
       <Card className="border rounded-xl shadow-sm">
         <CardContent className="flex flex-col md:flex-row gap-4 p-4">

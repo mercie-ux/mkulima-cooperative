@@ -12,7 +12,7 @@ const Profile = () => {
   if (!user) return null;
 
   return (
-    <div className="space-y-6 max-w-2xl">
+    <div className="space-y-6 max-w-2xl mt-8">
       {/* Header */}
       <div>
         <h2 className="text-3xl font-bold tracking-tight font-Heading">My Profile</h2>

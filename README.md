@@ -1,6 +1,8 @@
-##Overview
-##Mkulima Cooperative Management System
+## Overview
+
+## Mkulima Cooperative Management System
 A comprehensive web application designed to manage cooperative farming operations with role-based access control for Admins and Farmers.
+
 🌾 Project Overview
 The Mkulima Cooperative Management System is a full-stack web application that enables efficient management of farmers and their crops within a cooperative structure. The system provides distinct dashboards and functionalities based on user roles (Admin vs Farmer).
 
