@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use("/api/mycrops", require('./routes/mycrops'));
-app.use("/api/farmers", require('./routes/Farmers'))
+app.use("/api/farmers", require('./routes/farmers'))
 
 // Health check route
 app.get('/api/health', (req, res) => {
