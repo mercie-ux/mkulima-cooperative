@@ -4,7 +4,9 @@
 A comprehensive web application designed to manage cooperative farming operations with role-based access control for Admins and Farmers.
 
 🌾 Project Overview
-The Mkulima Cooperative Management System is a full-stack web application that enables efficient management of farmers and their crops within a cooperative structure. The system provides distinct dashboards and functionalities based on user roles (Admin vs Farmer).
+
+The Mkulima Cooperative Management System is a full-stack web application that enables efficient management of farmers and their crops within a cooperative structure. 
+The system provides distinct dashboards and functionalities based on user roles (Admin vs Farmer).
 
 Features
 Admin Features
@@ -36,27 +38,27 @@ Crop Management
 - Edit and delete only owned crops
 
 Tech Stack
-Frontend
-React (vite)- Modern JavaScript library for building user interfaces
-CSS Framework(Tailwindcss) - Responsive design with modern styling
-Chart.js - Interactive data visualization
-React Router - Client-side routing
 
-Backend
-Node.js - JavaScript runtime environment
-Express.js - Web application framework
-Postgres database management
-Sequelize - Object-Relational Mapping (ORM)
-JWT - JSON Web Tokens for authentication
+1.Frontend
+- React (vite)- Modern JavaScript library for building user interfaces
+- CSS Framework(Tailwindcss) - Responsive design with modern styling
+- Chart.js - Interactive data visualization
+- React Router - Client-side routing
+
+2.Backend
+- Node.js - JavaScript runtime environment
+- Express.js - Web application framework
+- Postgres database management
+- Sequelize - Object-Relational Mapping (ORM)
+- JWT - JSON Web Tokens for authentication
 
 Deployment
 
 Render - Cloud platform for hosting backend
 vercel - Frontend
 
-🚀 Getting Started
+## Getting Started
 Prerequisites
-
 Node.js (v14 or higher)
 MySQL database
 Git
@@ -64,28 +66,38 @@ Git
 Installation
 
 Clone the repository
+```
 bashgit clone https://github.com/mercie-ux/mkulima-cooperative.git
 cd mkulima-cooperative
+```
 
 Install backend dependencies
+```
 bashcd backend
 npm install
+```
 
 Install frontend dependencies
+```
 bashcd ../frontend
 npm install
+```
 
 Running the Application
 
 Start the backend server
-bashcd backend
+```
+bash cd backend
 node server.js
-# Server runs on http://localhost:5000
+```
+## Server runs on http://localhost:5000
 
 Start the frontend development server
-bashcd frontend
+```
+cd frontend
 yarn dev
-# Application runs on http://localhost:3000
+```
+## Application runs on http://localhost:5173/
 
 
 📱 Usage
