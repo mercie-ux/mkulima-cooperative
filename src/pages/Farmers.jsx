@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Button } from '../components/ui/button';
 import { Badge } from '../components/ui/badge';
 import { Input } from '../components/ui/input';
-import { Plus, Search, Phone, MapPin, Calendar, Edit, Trash2 } from 'lucide-react';
+import { Plus, Search, Phone, MapPin, Calendar, Edit, Trash2, XIcon } from 'lucide-react';
 import { getFarmers, addFarmer, updateFarmer, deleteFarmer } from '../utils/api';
 
 export default function Farmers() {
@@ -11,6 +11,14 @@ export default function Farmers() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [showForm, setShowForm] = useState(false);
+  const [newFarmer, setNewFarmer] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    location: "",
+    farmSize: "",
+  });
 
   // Fetch farmers from backend
   const fetchFarmers = async () => {
@@ -30,21 +38,22 @@ export default function Farmers() {
     fetchFarmers();
   }, []);
 
-  // Add farmer (example with dummy data)
-  const handleAddFarmer = async () => {
-    const newFarmer = {
-      name: 'New Farmer',
-      email: 'newfarmer@example.com',
-      phone: '',
-      location: '',
-      farmSize: 0,
-    };
+  // form input change
+  const handleInputChange = (e) => {
+    setNewFarmer({ ...newFarmer, [e.target.name]: e.target.value });
+  };
+
+  // Submit farmer
+  const handleSubmitFarmer = async (e) => {
+    e.preventDefault();
     try {
-      await addFarmer(newFarmer);
+      await addFarmer({ ...newFarmer, farmSize: Number(newFarmer.farmSize) });
+      setNewFarmer({ name: "", email: "", phone: "", location: "", farmSize: "" });
+      setShowForm(false);
       fetchFarmers();
     } catch (err) {
       console.error(err);
-      setError('Failed to add farmer.');
+      setError("Failed to add farmer.")
     }
   };
 
@@ -89,15 +98,73 @@ export default function Farmers() {
           </p>
         </div>
         <Button
-          onClick={handleAddFarmer}
+          onClick={() => setShowForm(true)}
           className="bg-green-600 font-body text-white hover:bg-green-700 hover:text-white flex items-center"
         >
           <Plus className="mr-2 h-4 w-4" /> Add Farmer
         </Button>
       </div>
 
+      {/*Add Farmer Form */}
+      {showForm && (
+        <Card className="shadow-sm">
+          <CardHeader className="flex justify-between font-Heading">
+            <CardTitle>Add New Farmer
+              <Button variant="ghost" size="sm" onClick={() => setShowForm(false)} className="bg-white">
+                <XIcon className="h-4 w-4 bg-green-400" />
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmitFarmer} className="space-y-4 font-body">
+              <Input 
+                placeholder="Name"
+                name="name"
+                value={newFarmer.name}
+                onChange={handleInputChange}
+                required
+              />
+              <Input 
+                placeholder="Email"
+                type="email"
+                name="email"
+                value={newFarmer.email}
+                onChange={handleInputChange}
+              />
+              <Input 
+                placeholder="Phone"
+                name="phone"
+                value={newFarmer.phone}
+                onChange={handleInputChange}
+              />
+              <Input 
+                placeholder="Location"
+                name="location"
+                value={newFarmer.location}
+                onChange={handleInputChange}
+              />
+              <Input 
+                placeholder="Farm Size (acres)"
+                type="number"
+                name="farmSize"
+                value={newFarmer.farmSize}
+                onChange={handleInputChange}
+              />
+              <div className="flex justify-end gap-2">
+                <Button type="button" variant ="outline" onClick={() => setShowForm(false)}>
+                  Cancel
+                </Button>
+                <Button type="subnit" className="bg-green-600 text-white hover:bg-green-700">
+                  Save Farmer
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Search */}
-      <Card className="shadow-farm font-body">
+      <Card className="shadow-sm font-body">
         <CardHeader>
           <CardTitle>Search Farmers</CardTitle>
         </CardHeader>
@@ -121,7 +188,7 @@ export default function Farmers() {
       {/* Farmers Grid */}
       <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 font-body">
         {filteredFarmers.map((farmer) => (
-          <Card key={farmer.id} className="shadow-farm hover:shadow-crop transition-shadow">
+          <Card key={farmer.id} className="shadow-md hover:shadow-sm transition-shadow">
             <CardHeader>
               <div className="flex justify-between items-start">
                 <div>
@@ -176,7 +243,7 @@ export default function Farmers() {
       </div>
 
       {filteredFarmers.length === 0 && !loading && (
-        <Card className="shadow-farm">
+        <Card className="shadow-sm">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Search className="h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-semibold mb-2">No farmers found</h3>
