@@ -55,6 +55,7 @@ Tech Stack
 Deployment
 
 Render - Cloud platform for hosting backend
+
 vercel - Frontend
 
 ## Getting Started
