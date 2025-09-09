@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: ["http://localhost:5173", "https://mkulima-frontend.onrender.com"], 
+  origin: ["http://localhost:5173", "https://mkulima-cooperative-hqw3.vercel.app/"], 
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
