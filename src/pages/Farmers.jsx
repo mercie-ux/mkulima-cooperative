@@ -46,14 +46,33 @@ export default function Farmers() {
   // Submit farmer
   const handleSubmitFarmer = async (e) => {
     e.preventDefault();
+    // form validation
+    if(!newFarmer.name.trim()){
+      setError("Name is required.");
+      return;
+    }
+    if(!newFarmer.email.trim()){
+      setError("Email is required.");
+      return;
+    }
+    if(!/\S+@\S+\.\S+/.test(newFarmer.email)){
+      setError("Invalid email format.");
+      return;
+    }
+    if(newFarmer.farmSize && isNaN(Number(newFarmer.farmSize))){
+      setError("Farm size must be a number.");
+      return;
+    }
     try {
-      await addFarmer({ ...newFarmer, farmSize: Number(newFarmer.farmSize) });
+      const savedFarmer = await addFarmer({ ...newFarmer, farmSize: Number(newFarmer.farmSize),});
+      setFarmers((prev) => [...prev, savedFarmer]);
+      // resets form
       setNewFarmer({ name: "", email: "", phone: "", location: "", farmSize: "" });
       setShowForm(false);
       fetchFarmers();
     } catch (err) {
       console.error(err);
-      setError("Failed to add farmer.")
+      setError(`Failed to add farmer: ${err.message}`)
     }
   };
 
