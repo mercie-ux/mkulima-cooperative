@@ -12,7 +12,8 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: '*', 
+  origin: ["http://localhost:5173", "https://mkulima-frontend.onrender.com"], 
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 
@@ -59,7 +60,7 @@ async function startServer() {
       alter: process.env.NODE_ENV === 'development',
       force: false 
     });
-    console.log('Database synchronized');
+    console.log('Database synchronized successfully');
 
     // Start server
     app.listen(PORT, () => {
